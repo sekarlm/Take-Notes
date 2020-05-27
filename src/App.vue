@@ -1,22 +1,17 @@
 <template>
 	<div id="app">
 		<Header />
-		<!-- <ItemsContainer /> -->
-		<DetailContainer />
+		<router-view />
 	</div>
 </template>
 
 <script>
 import Header from './components/Header.vue'
-// import ItemsContainer from './components/ItemsContainer.vue'
-import DetailContainer from './components/DetailContainer.vue'
 
 export default {
 	name: 'App',
 	components: {
-		Header,
-		// ItemsContainer,
-		DetailContainer
+		Header
 	}
 }
 </script>

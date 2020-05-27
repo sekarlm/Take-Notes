@@ -1,7 +1,7 @@
 <template>
     <div>
-        <b-nav tabs>
-            <b-nav-item disabled><b>Take Notes!</b></b-nav-item>
+        <b-nav>
+            <b-nav-item active><router-link to='/'><b>Take Notes!</b></router-link></b-nav-item>
         </b-nav>
     </div>
 </template>
