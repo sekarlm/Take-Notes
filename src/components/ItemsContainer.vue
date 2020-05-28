@@ -5,38 +5,59 @@
                 <b-jumbotron>
                     <b-list-group>
                         <b-list-group-item 
-                        to="/details"
-                        v-for="todo in todos"
+                        v-for="(todo, index) in todos"
                         :key="todo.id"
                         class="flex-column align-items-start">
-                            <div class="d-flex w-100 justify-content-between">
-                                <h5 class="mb-1">{{ todo.title }}</h5>
-                                <div class="btn-group">
-                                    <b-button size="sm" class="btn" variant="outline-primary">Edit</b-button>
-                                    <b-button size="sm" class="btn" variant="outline-danger">Delete</b-button>
+
+                            <div class="ItemContainer" v-if="!todo.editing" @dblclick="editTodo(todo)">
+                                <div class="d-flex w-100 justify-content-between">
+                                    <h5 class="mb-1">{{ todo.title }}</h5>
+                                    <div class="btn-group">
+                                        <b-button size="sm" class="btn" @click="deleteTodo(index)" variant="outline-danger">Delete</b-button>
+                                    </div>
+                                </div>
+
+                                <p class="mb-1">
+                                    {{ todo.description }}
+                                </p>
+
+                                <small>Deadline : {{ todo.deadline }}</small>
+                            </div>
+
+                            <div class="editContainer" v-else @blur="doneEdit(todo)">
+                                <div class="flex-column align-items-start">
+                                    <b-form-input
+                                        id="title-edit"
+                                        v-model="todo.title"
+                                    ></b-form-input>
+                                    <b-form-textarea
+                                        id="description-edit"
+                                        v-model="todo.description"
+                                        rows="5"
+                                    ></b-form-textarea>
+                                    <b-form-input
+                                        id="deadline-edit"
+                                        v-model="todo.deadline"
+                                    ></b-form-input>
+                                    <b-button @click="doneEdit(todo)" variant="primary">Submit</b-button>
                                 </div>
                             </div>
 
-                            <p class="mb-1">
-                                {{ todo.description.substring(0,50)+".." }}
-                            </p>
-
-                            <small>Deadline : {{ todo.deadline }}</small>
                         </b-list-group-item>
                     </b-list-group>
                     <hr class="my-4">
-                    <b-button v-b-modal.modal-prevent-closing variant="primary">Add Notes</b-button>
+                    <b-button v-b-modal.modal-add-notes variant="primary">Add Notes</b-button>
                 </b-jumbotron>
 
                 <b-modal
-                    id="modal-prevent-closing"
+                    id="modal-add-notes"
                     ref="modal"
                     title="Submit Your Note"
                     @show="resetModal"
                     @hidden="resetModal"
                     @ok="handleOk"
                 >
-                    <form ref="form" @submit.stop.prevent="handleSubmit">
+                    <b-form ref="form" @submit.stop.prevent="handleSubmit">
                         <b-form-group
                             :state="todo_state"
                             label="Title"
@@ -72,7 +93,7 @@
                                 v-model="todo_input.deadline"
                             ></b-form-input>
                         </b-form-group>
-                    </form>
+                    </b-form>
                 </b-modal>
             </b-col>
         </b-row>
@@ -82,32 +103,41 @@
 
 <script>
 import moment from 'moment'
+// import EditForm from './EditForm.vue'
 
 export default {
     name: 'Items',
+    components: {
+        // EditForm
+    },
     data() {
         return {
             todo_input: {
                 'id': null,
-                'title': '',
+                'title': 'Helo',
                 'description': '',
-                'deadline': null
+                'deadline': null,
+                'editing': false
             },
             todo_state: null,
             todos: [
                 {
-                    'id': 1,
+                    'id': 0,
                     'title': 'Finish Coding Assignment',
                     'description': 'Make web application using VueJs. It is a web application to record college assignments. It can add new task, delete and edit existing task.',
-                    'deadline': this.format_date('28 May 2020')
+                    'deadline': this.format_date('28 May 2020'),
+                    'editing': false
                 },
                 {
-                    'id': 2,
+                    'id': 1,
                     'title': 'Finish Machine Learning Assignment',
                     'description': 'Learn NLP with PyTorch. NLP or Natural Language Processing is a pseudoscientific approach to communication, personal development, and psychotherapy created by Richard Bandler',
-                    'deadline': this.format_date('30 May 2020')
+                    'deadline': this.format_date('30 May 2020'),
+                    'editing': false
                 }
-            ]
+            ],
+            show: true,
+            modalShow: false
         }
     },
     methods: {
@@ -115,6 +145,17 @@ export default {
             if(value) {
                 return moment(String(value)).format('YYYY-MM-DD')
             }
+        },
+        deleteTodo(id) {
+            // alert(id)
+            this.todos.splice(id, 1)
+            // console.log(this.todos)
+        },
+        editTodo(todo) {
+            todo.editing = true
+        },
+        doneEdit(todo) {
+            todo.editing = false
         },
         checkFormValidity() {
             const valid = this.$refs.form.checkValidity()
@@ -132,18 +173,18 @@ export default {
         },
         handleOk(bvModalEvt) {
             bvModalEvt.preventDefault()
-            this.handleSubmit()
+            this.handleSubmit(this.todos.id)
         },
-        handleSubmit() {
+        handleSubmit(id) {
             if (!this.checkFormValidity()) {
                 return
             }
-            this.todo_input.id = this.todos.id++
+            this.todo_input.id = id++
             this.todo_input.deadline = this.format_date(this.todo_input.deadline)
             this.todos.push(this.todo_input)
             
             this.$nextTick(() => {
-                this.$bvModal.hide('modal-prevent-closing')
+                this.$bvModal.hide('modal-add-notes')
             })
         }
     }
