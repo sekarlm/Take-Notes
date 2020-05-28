@@ -27,3 +27,12 @@ npm run lint
 See [Configuration Reference](https://cli.vuejs.org/config/).
 
 ## Screenshots of Application
+### Take Notes!
+![](screenshots/take-note.png)
+### Add A Note
+![](screenshots/add.png)
+### Delete A Note
+![](screenshots/delete-1.png)
+![](screenshots/delete-2.png)
+### Edit A Note
+![](screenshots/edit.png)
