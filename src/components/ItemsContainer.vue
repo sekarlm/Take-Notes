@@ -1,19 +1,25 @@
 <template>
-    <div>
-        <b-row>
-            <b-col sm="7" offset="3">
-                <b-jumbotron>
-                    <b-list-group>
-                        <b-list-group-item 
+    <div class="container">
+        <b-row class="row-container">
+            <b-col class="col-container" sm="7" offset="3">
+                <b-jumbotron class="task-container">
+
+                    <b-list-group class="group-task">
+                        <b-list-group-item id="list-task"
                         v-for="(todo, index) in todos"
                         :key="todo.id"
                         class="flex-column align-items-start">
 
-                            <div class="ItemContainer" v-if="!todo.editing" @dblclick="editTodo(todo)">
-                                <div class="d-flex w-100 justify-content-between">
+                            <div class="item-container" v-if="!todo.editing">
+                                <div class="d-flex w-100 justify-content-between" id="header-task-list">
                                     <h5 class="mb-1">{{ todo.title }}</h5>
                                     <div class="btn-group">
-                                        <b-button size="sm" class="btn" @click="deleteTodo(index)" variant="outline-danger">Delete</b-button>
+                                        <b-button class="edit-btn" size="sm" @click="editTodo(todo)">
+                                            <b-icon icon="pencil" variant="primary" ></b-icon>
+                                        </b-button>
+                                        <b-button class="delete-btn" size="sm" @click="deleteTodo(index)">
+                                            <b-icon icon="trash" variant="danger" ></b-icon>
+                                        </b-button>
                                     </div>
                                 </div>
 
@@ -24,8 +30,7 @@
                                 <small>Deadline : {{ todo.deadline }}</small>
                             </div>
 
-                            <div class="editContainer" v-else @blur="doneEdit(todo)">
-                                <div class="flex-column align-items-start">
+                            <div class="edit-container" v-else @blur="doneEdit(todo)">
                                     <b-form-input
                                         id="title-edit"
                                         v-model="todo.title"
@@ -39,14 +44,14 @@
                                         id="deadline-edit"
                                         v-model="todo.deadline"
                                     ></b-form-input>
-                                    <b-button @click="doneEdit(todo)" variant="primary">Submit</b-button>
-                                </div>
+                                    <b-button class="done-btn" @click="doneEdit(todo)" variant="outline-primary">Done</b-button>
                             </div>
 
                         </b-list-group-item>
                     </b-list-group>
+
                     <hr class="my-4">
-                    <b-button v-b-modal.modal-add-notes variant="primary">Add Notes</b-button>
+                    <b-button class="add-btn" block v-b-modal.modal-add-notes variant="primary">Add New Task</b-button>
                 </b-jumbotron>
 
                 <b-modal
@@ -103,13 +108,9 @@
 
 <script>
 import moment from 'moment'
-// import EditForm from './EditForm.vue'
 
 export default {
     name: 'Items',
-    components: {
-        // EditForm
-    },
     data() {
         return {
             todo_input: {
@@ -192,4 +193,24 @@ export default {
 </script>
 
 <style scoped>
+.task-container {
+    background-color: white;
+    height: 100%;
+}
+.delete-btn, .edit-btn {
+    border-color: white;
+    background-color: white;
+}
+#header-task-list {
+    margin-bottom: 10px;
+}
+#header-task-list h5 {
+    font-weight: bold;
+}
+.edit-container {
+    margin: 10px 2px;
+}
+#title-edit, #description-edit, #deadline-edit {
+    margin-bottom: 10px;
+}
 </style>
