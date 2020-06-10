@@ -1,109 +1,153 @@
 <template>
-    <div class="container">
-        <b-row class="row-container">
-            <b-col class="col-container" sm="7" offset="3">
-                <b-jumbotron class="task-container">
-
-                    <b-list-group class="group-task">
-                        <b-list-group-item id="list-task"
-                        v-for="(todo, index) in todos"
-                        :key="todo.id"
-                        class="flex-column align-items-start">
-
-                            <div class="item-container" v-if="!todo.editing">
-                                <div class="d-flex w-100 justify-content-between" id="header-task-list">
-                                    <h5 class="mb-1">{{ todo.title }}</h5>
-                                    <div class="btn-group">
-                                        <b-button class="edit-btn" size="sm" @click="editTodo(todo)">
-                                            <b-icon icon="pencil" variant="primary" ></b-icon>
-                                        </b-button>
-                                        <b-button class="delete-btn" size="sm" @click="deleteTodo(index)">
-                                            <b-icon icon="trash" variant="danger" ></b-icon>
-                                        </b-button>
-                                    </div>
-                                </div>
-
-                                <p class="mb-1">
-                                    {{ todo.description }}
-                                </p>
-
-                                <small>Deadline : {{ todo.deadline }}</small>
-                            </div>
-
-                            <div class="edit-container" v-else @blur="doneEdit(todo)">
-                                    <b-form-input
-                                        id="title-edit"
-                                        v-model="todo.title"
-                                    ></b-form-input>
-                                    <b-form-textarea
-                                        id="description-edit"
-                                        v-model="todo.description"
-                                        rows="5"
-                                    ></b-form-textarea>
-                                    <b-form-input
-                                        id="deadline-edit"
-                                        v-model="todo.deadline"
-                                    ></b-form-input>
-                                    <b-button class="done-btn" @click="doneEdit(todo)" variant="outline-primary">Done</b-button>
-                            </div>
-
-                        </b-list-group-item>
-                    </b-list-group>
-
-                    <hr class="my-4">
-                    <b-button class="add-btn" block v-b-modal.modal-add-notes variant="primary">Add New Task</b-button>
-                </b-jumbotron>
-
-                <b-modal
-                    id="modal-add-notes"
-                    ref="modal"
-                    title="Submit Your Note"
-                    @show="resetModal"
-                    @hidden="resetModal"
-                    @ok="handleOk"
+  <div class="container">
+    <b-row class="row-container">
+      <b-col
+        class="col-container"
+        sm="7"
+        offset="3"
+      >
+        <b-jumbotron class="task-container">
+          <b-list-group class="group-task">
+            <b-list-group-item
+              v-for="(todo, index) in todos"
+              id="list-task"
+              :key="todo.id"
+              class="flex-column align-items-start"
+            >
+              <div
+                v-if="!todo.editing"
+                class="item-container"
+              >
+                <div
+                  id="header-task-list"
+                  class="d-flex w-100 justify-content-between"
                 >
-                    <b-form ref="form" @submit.stop.prevent="handleSubmit">
-                        <b-form-group
-                            :state="todo_state"
-                            label="Title"
-                            label-for="title-input"
-                            invalid-feedback="Title is required"
-                        >
-                            <b-form-input
-                                id="title-input"
-                                v-model="todo_input.title"
-                                :state="todo_state"
-                                required
-                            ></b-form-input>
-                        </b-form-group>
+                  <h5 class="mb-1">
+                    {{ todo.title }}
+                  </h5>
+                  <div class="btn-group">
+                    <b-button
+                      class="edit-btn"
+                      size="sm"
+                      @click="editTodo(todo)"
+                    >
+                      <b-icon
+                        icon="pencil"
+                        variant="primary"
+                      />
+                    </b-button>
+                    <b-button
+                      class="delete-btn"
+                      size="sm"
+                      @click="deleteTodo(index)"
+                    >
+                      <b-icon
+                        icon="trash"
+                        variant="danger"
+                      />
+                    </b-button>
+                  </div>
+                </div>
 
-                        <b-form-group
-                            label="Task Description"
-                            label-for="description-input"
-                        >
-                            <b-form-textarea
-                                id="title-input"
-                                v-model="todo_input.description"
-                                rows="8"
-                            ></b-form-textarea>
-                        </b-form-group>
+                <p class="mb-1">
+                  {{ todo.description }}
+                </p>
 
-                        <b-form-group
-                            label="Deadline"
-                            label-for="deadline-input"
-                            description="example : 05 Dec 2020"
-                        >
-                            <b-form-input
-                                id="title-input"
-                                v-model="todo_input.deadline"
-                            ></b-form-input>
-                        </b-form-group>
-                    </b-form>
-                </b-modal>
-            </b-col>
-        </b-row>
-        
-    </div>
+                <small>Deadline : {{ todo.deadline }}</small>
+              </div>
+
+              <div
+                v-else
+                class="edit-container"
+                @blur="doneEdit(todo)"
+              >
+                <b-form-input
+                  id="title-edit"
+                  v-model="todo.title"
+                />
+                <b-form-textarea
+                  id="description-edit"
+                  v-model="todo.description"
+                  rows="5"
+                />
+                <b-form-input
+                  id="deadline-edit"
+                  v-model="todo.deadline"
+                />
+                <b-button
+                  class="done-btn"
+                  variant="outline-primary"
+                  @click="doneEdit(todo)"
+                >
+                  Done
+                </b-button>
+              </div>
+            </b-list-group-item>
+          </b-list-group>
+
+          <hr class="my-4">
+          <b-button
+            v-b-modal.modal-add-notes
+            class="add-btn"
+            block
+            variant="primary"
+          >
+            Add New Task
+          </b-button>
+        </b-jumbotron>
+
+        <b-modal
+          id="modal-add-notes"
+          ref="modal"
+          title="Submit Your Note"
+          @show="resetModal"
+          @hidden="resetModal"
+          @ok="handleOk"
+        >
+          <b-form
+            ref="form"
+            @submit.stop.prevent="handleSubmit"
+          >
+            <b-form-group
+              :state="todo_state"
+              label="Title"
+              label-for="title-input"
+              invalid-feedback="Title is required"
+            >
+              <b-form-input
+                id="title-input"
+                v-model="todo_input.title"
+                :state="todo_state"
+                required
+              />
+            </b-form-group>
+
+            <b-form-group
+              label="Task Description"
+              label-for="description-input"
+            >
+              <b-form-textarea
+                id="title-input"
+                v-model="todo_input.description"
+                rows="8"
+              />
+            </b-form-group>
+
+            <b-form-group
+              label="Deadline"
+              label-for="deadline-input"
+              description="example : 05 Dec 2020"
+            >
+              <b-form-input
+                id="title-input"
+                v-model="todo_input.deadline"
+              />
+            </b-form-group>
+          </b-form>
+        </b-modal>
+      </b-col>
+    </b-row>
+  </div>
 </template>
 
 <script>
