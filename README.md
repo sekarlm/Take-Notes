@@ -35,4 +35,5 @@ See [Configuration Reference](https://cli.vuejs.org/config/).
 ![](screenshots/delete-1.png)
 ![](screenshots/delete-2.png)
 ### Edit A Note
+Double click on the task to display input box to edit the task.
 ![](screenshots/edit.png)
